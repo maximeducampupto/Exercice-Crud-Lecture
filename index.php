@@ -57,7 +57,7 @@ function getTwenty($conn)
 
 function getClientsCards($conn)
 {
-    $query = 'select clients.firstName, clients.lastName from clients where card = 1';
+    $query = 'select * from clients join cards on cards.cardNumber = clients.cardNumber and cards.cardTypesId = 1';
 
     if ($query = $conn->query($query)) {
         return $query->fetchAll(PDO::FETCH_ASSOC);
@@ -82,7 +82,7 @@ function getSpectacles($conn)
 
 function getAllClientsInfos($conn)
 {
-    $query = 'select * from clients';
+    $query = 'select * from clients left join cards on cards.cardNumber = clients.cardNumber order by clients.id';
     if ($query = $conn->query($query)) {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -165,16 +165,15 @@ function getAllClientsInfos($conn)
                 <p>Nom: <?= $client['lastName'] ?></p>
                 <p>Prénom: <?= $client['firstName'] ?></p>
                 <p>Date de naissance: <?= $client['birthDate'] ?></p>
-                <p>Carte de fidélité: <?= $client['card'] == 1 ? 'Oui' : 'Non' ?></p>
+                <p>Carte de fidélité: <?= $client['card'] == 1 && $client['cardTypesId'] == 1 ? 'Oui' : 'Non' ?></p>
                 <?php
-                if ($client['card'] == 1) { ?>
+                if ($client['card'] == 1 && $client['cardTypesId'] == 1) { ?>
                     <p>Numéro de carte: <?= $client['cardNumber'] ?></p>
                 <?php } ?>
             </div>
             <br>
         <?php } ?>
     </div>
-
 
 </body>
 </html>
